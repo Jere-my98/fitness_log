@@ -14,8 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from .settings import DEBUG
+from .settings import DEBUG, MEDIA_URL, MEDIA_ROOT
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, re_path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -35,5 +36,8 @@ urlpatterns = [
 
 if DEBUG:
     import debug_toolbar
-    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)), 
+    ]
+    urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
 
