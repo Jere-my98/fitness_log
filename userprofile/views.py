@@ -2,7 +2,7 @@ from rest_framework import permissions, generics
 from .models import UserProfile
 from rest_framework.exceptions import NotFound
 from .serializers import UserProfileSerializer
-
+from rest_framework.parsers import MultiPartParser, FormParser
 # Create your views here.
 class UserProfileViewSet(generics.RetrieveUpdateAPIView):
     """
@@ -18,5 +18,19 @@ class UserProfileViewSet(generics.RetrieveUpdateAPIView):
         try:
             return UserProfile.objects.get(user=self.request.user)
         
+        except UserProfile.DoesNotExist:
+            raise NotFound(detail="User profile not found.")
+        
+class UserProfileAvatarView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Allows authenticated users to upload/update/delete their avatar.
+    """
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # Support file uploads
+
+    def get_object(self):
+        try:
+            return UserProfile.objects.get(user=self.request.user)
         except UserProfile.DoesNotExist:
             raise NotFound(detail="User profile not found.")
