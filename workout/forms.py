@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Workout, WorkoutSession
 
 BODY_PARTS = (
@@ -37,8 +38,12 @@ class WorkoutForm(forms.ModelForm):
         model = Workout
         fields = ['session', 'weight_carried', 'sets', 'reps', 'body_part']
 
+WorkoutFormSet = inlineformset_factory(
+    WorkoutSession,  # Parent Model
+    Workout,  # Child Model
+    form=WorkoutForm,
+    extra=1,  # Allows adding at least one Workout by default
+    can_delete=True  # Allows removing workouts
+)
 class DeleteWorkoutSessionForm(forms.Form):  
     session_id = forms.IntegerField(widget=forms.HiddenInput())
-
-class DeleteWorkoutForm(forms.Form):
-    workout_id = forms.IntegerField(widget=forms.HiddenInput())
