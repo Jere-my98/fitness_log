@@ -15,14 +15,6 @@ class WorkoutSessionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class WorkoutSessionList(APIView):
-    permission_classes = [permissions.IsAuthenticated]  # Requires authentication
-
-    def get(self, request):
-        workout_sessions = WorkoutSession.objects.filter(user=request.user)
-        serializer = WorkoutSessionSerializer(workout_sessions, many=True)
-        return Response(serializer.data)
-    
 class WorkoutViewSet(RetrieveUpdateDestroyAPIView):
     serializer_class = WorkoutSerializer
     permission_classes = [permissions.IsAuthenticated]
