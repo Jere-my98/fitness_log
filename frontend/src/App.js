@@ -22,7 +22,8 @@ class App extends React.Component {
         password,
       });
 
-      const token = res.data.auth_token; // Djoser uses 'auth_token' by default
+      const token = res.data.auth_token;
+      console.log(res)
       localStorage.setItem('token', token);
       this.setState({ isLoggedIn: true });
       this.fetchWorkoutSessions();
@@ -37,8 +38,8 @@ class App extends React.Component {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await axios.get('http://localhost:8000/workout-sessions/', {
-        headers: { 'Authorization': `Token ${token}` },
+      const res = await axios.get('http://localhost:8000/workout-sessions/1', {
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       this.setState({
@@ -47,6 +48,9 @@ class App extends React.Component {
       });
     } catch (err) {
       const errorMsg = err.response?.data?.detail || 'Failed to fetch workout sessions.';
+      console.log(
+        err,
+      )
       this.setState({
         error: errorMsg,
         loading: false,
