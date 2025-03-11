@@ -13,6 +13,7 @@ djangorestframework-simplejwt = "*"
 social-auth-app-django = "*"
 django-filter = "*"
 pillow = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

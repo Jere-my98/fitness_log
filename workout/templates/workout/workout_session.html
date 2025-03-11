@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    {{ user.username }}
+    <h1>Workout Sessions</h1>
+    {% for session in workout_sessions %}
+        <div>
+            <h2>Name: {{ session.name }} - Date: {{ session.date }} - Time: {{ session.time }}</h2>
+            <h2>Workouts for this Workout Session</h2>
+            {% for workout in session.workouts.all %}
+                <li>{{ workout.body_part }} - {{ workout.sets }} Sets - {{ workout.reps }} Reps - {{ workout.weight_carried }} Kg </li>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock content %}
