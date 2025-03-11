@@ -1,7 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import viewsets, permissions, serializers
 from .models import WorkoutSession, Workout
-from django.views.generic import TemplateView
 from .serializers import WorkoutSessionSerializer, WorkoutSerializer
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
@@ -15,13 +15,13 @@ class WorkoutSessionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class WorkoutSessionTemplateView(LoginRequiredMixin,TemplateView):
-    template_name = 'workout/workout_session.html'
+class WorkoutSessionList(APIView):
+    permission_classes = [permissions.IsAuthenticated]  # Requires authentication
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context ['workout_sessions'] = WorkoutSession.objects.filter(user=self.request.user)
-        return context
+    def get(self, request):
+        workout_sessions = WorkoutSession.objects.filter(user=request.user)
+        serializer = WorkoutSessionSerializer(workout_sessions, many=True)
+        return Response(serializer.data)
     
 class WorkoutViewSet(RetrieveUpdateDestroyAPIView):
     serializer_class = WorkoutSerializer
