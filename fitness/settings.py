@@ -18,6 +18,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/' # Public URL at the browser
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Directory where uploaded media is saved.
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -71,7 +72,7 @@ ROOT_URLCONF = 'fitness.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/"templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

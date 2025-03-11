@@ -1,10 +1,13 @@
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from rest_framework import permissions, generics
 from .models import UserProfile
 from rest_framework.exceptions import NotFound
 from .serializers import UserProfileSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 # Create your views here.
-class UserProfileViewSet(generics.RetrieveUpdateAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
     """
     Allows authenticated users to retrieve and update their own UserProfile.
     """
@@ -20,7 +23,15 @@ class UserProfileViewSet(generics.RetrieveUpdateAPIView):
         
         except UserProfile.DoesNotExist:
             raise NotFound(detail="User profile not found.")
-        
+
+class UserProfileTemplateView(LoginRequiredMixin, TemplateView):
+    template_name = 'userprofile/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = get_object_or_404(UserProfile, user=self.request.user)
+        return context
+            
 class UserProfileAvatarView(generics.RetrieveUpdateDestroyAPIView):
     """
     Allows authenticated users to upload/update/delete their avatar.

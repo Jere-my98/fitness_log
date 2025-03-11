@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <h1>{{ profile.user.username }}'s Profile</h1>
+    <p><strong>Name:</strong> {{ profile.name }}</p>
+    <p><strong>Age:</strong> {{ profile.age }}</p>
+    <p><strong>Mantra:</strong> {{ profile.mantra }}</p>
+
+    {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}" alt="Profile Avatar" width="200">
+    {% endif %}
+  </div>
+{% endblock content %}
