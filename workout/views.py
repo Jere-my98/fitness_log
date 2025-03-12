@@ -99,22 +99,47 @@ class WorkoutSessionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return WorkoutSession.objects.filter(user=self.request.user)
+        """
+        List all workout sessions for the authenticated user.
+        If `pk` is in the request, filter by that specific session.
+        """
+        queryset = WorkoutSession.objects.filter(user=self.request.user)
+        session_id = self.kwargs.get('pk')
+        if session_id:
+            queryset = queryset.filter(id=session_id)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class WorkoutViewSet(RetrieveUpdateDestroyAPIView):
+
+class WorkoutViewSet(viewsets.ModelViewSet):
     serializer_class = WorkoutSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Workout.objects.all()
 
     def get_queryset(self):
-        return Workout.objects.filter(session__user=self.request.user)
+        """
+        Filter workouts by:
+        1. Authenticated user's workout sessions.
+        2. Specific workout session ID.
+        3. Specific workout ID.
+        """
+        queryset = Workout.objects.filter(workout_session__user=self.request.user)
+
+        # Filter by workout session ID if provided
+        session_id = self.kwargs.get('session_id')
+        if session_id:
+            queryset = queryset.filter(workout_session_id=session_id)
+
+        # Filter by workout ID if provided
+        workout_id = self.kwargs.get('pk')
+        if workout_id:
+            queryset = queryset.filter(id=workout_id)
+
+        return queryset
 
     def perform_create(self, serializer):
         session = serializer.validated_data['session']
         if session.user != self.request.user:
             raise serializers.ValidationError("You can only add workouts to your own session.")
         serializer.save()
-

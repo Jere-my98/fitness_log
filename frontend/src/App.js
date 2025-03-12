@@ -17,14 +17,15 @@ class App extends React.Component {
     const { username, password } = this.state;
 
     try {
-      const res = await axios.post('http://localhost:8000/api/token/login/', {
+      const res = await axios.post('http://localhost:8000/login/', {
         username,
         password,
       });
 
-      const token = res.data.auth_token;
-      console.log(res)
-      localStorage.setItem('token', token);
+      const { access, refresh } = res.data;  // Extract both tokens
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+
       this.setState({ isLoggedIn: true });
       this.fetchWorkoutSessions();
     } catch (err) {
@@ -33,13 +34,46 @@ class App extends React.Component {
     }
   };
 
-  // Fetch workout sessions
-  fetchWorkoutSessions = async () => {
-    const token = localStorage.getItem('token');
+  // Logout
+  handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+
+    this.setState({
+        isLoggedIn: false,
+        workoutSessions: [],
+        username: '',
+        password: '',
+    });
+};
+
+  // Refresh token
+  refreshToken = async () => {
+    const refreshToken = localStorage.getItem('refresh_token');
+
+    if (!refreshToken) {
+      this.handleLogout();  // Force logout if no refresh token exists
+      return;
+    }
 
     try {
-      const res = await axios.get('http://localhost:8000/workout-sessions/1', {
-        headers: { 'Authorization': `Token ${token}` },
+      const res = await axios.post('http://localhost:8000/api/token/refresh/', {
+        refresh: refreshToken,
+      });
+
+      localStorage.setItem('access_token', res.data.access);
+    } catch (err) {
+      this.handleLogout();  // Force logout if refresh fails
+    }
+  };
+
+  // Fetch workout sessions
+  fetchWorkoutSessions = async () => {
+    let token = localStorage.getItem('access_token');
+
+    try {
+      const res = await axios.get('http://localhost:8000/workout-sessions/', {
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       this.setState({
@@ -47,31 +81,20 @@ class App extends React.Component {
         loading: false,
       });
     } catch (err) {
+      // Check if token expired and refresh it
+      if (err.response && err.response.status === 401) {
+        await this.refreshToken();
+        return this.fetchWorkoutSessions();  // Retry fetching after refreshing the token
+      }
+
       const errorMsg = err.response?.data?.detail || 'Failed to fetch workout sessions.';
-      console.log(
-        err,
-      )
-      this.setState({
-        error: errorMsg,
-        loading: false,
-      });
+      this.setState({ error: errorMsg, loading: false });
     }
   };
 
   // Handle input changes
   handleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
-  };
-
-  // Logout
-  handleLogout = () => {
-    localStorage.removeItem('token');
-    this.setState({
-      isLoggedIn: false,
-      workoutSessions: [],
-      username: '',
-      password: '',
-    });
   };
 
   componentDidMount() {
