@@ -106,12 +106,15 @@ class App extends React.Component {
   }
 
   render() {
-    const { workoutSessions, loading, error, isLoggedIn, username, password } = this.state;
-
-    if (!isLoggedIn) {
-      return (
-        <div>
-          <h1>Login</h1>
+    const { username, password, error } = this.state;
+  
+    return (
+      <div>
+        <h1>Login</h1>
+        <form onSubmit={(e) => {
+          e.preventDefault(); // Prevent default form submission
+          this.handleLogin();
+        }}>
           <div>
             <input
               type="text"
@@ -119,6 +122,7 @@ class App extends React.Component {
               placeholder="Username"
               value={username}
               onChange={this.handleInputChange}
+              autoComplete="username"
             />
           </div>
           <div>
@@ -128,49 +132,17 @@ class App extends React.Component {
               placeholder="Password"
               value={password}
               onChange={this.handleInputChange}
+              autoComplete="current-password"
             />
           </div>
-          <button onClick={this.handleLogin}>Login</button>
-          {error && <div style={{ color: 'red' }}>{error}</div>}
-        </div>
-      );
-    }
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
-    return (
-      <div>
-        <header>
-          <h1>Workout Sessions</h1>
-          <button onClick={this.handleLogout}>Logout</button>
-        </header>
-        <hr />
-        {workoutSessions.length > 0 ? (
-          workoutSessions.map((session) => (
-            <div key={session.id}>
-              <h2>Workout Session: {session.name}</h2>
-              <h3>Date: {session.date} - Time: {session.time}</h3>
-              <h4>Workouts:</h4>
-              {session.workouts.length > 0 ? (
-                <ul>
-                  {session.workouts.map((workout, index) => (
-                    <li key={index}>
-                      {workout.body_part} - {workout.sets} sets, {workout.reps} reps, {workout.weight_carried} kg
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No workouts available for this session.</p>
-              )}
-            </div>
-          ))
-        ) : (
-          <div>No workout sessions available.</div>
-        )}
+          <button type="submit">Login</button> {/* Change from onClick to type="submit" */}
+        </form>
+  
+        {error && <div style={{ color: 'red' }}>{error}</div>}
       </div>
     );
   }
+  
 }
 
 export default App;

@@ -1,10 +1,11 @@
 from django.urls import path
 # from django.contrib.auth import views as auth_views
-from .views import WorkoutSessionViewSet, WorkoutViewSet, CustomTokenObtainPairView, CustomRefreshTokenView, LogoutView
+from .views import WorkoutSessionViewSet, WorkoutViewSet, CustomTokenObtainPairView, CustomRefreshTokenView, LogoutView, UserRegistrationView
 
 
 urlpatterns = [
-    # login and logout urls
+    # registration, login and logout urls
+    path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('api/token/refresh/', CustomRefreshTokenView.as_view(), name='token_refresh'),
     path('logout/', LogoutView.as_view(), name='logout'),

@@ -1,17 +1,26 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, serializers
 from .models import WorkoutSession, Workout
-from .serializers import WorkoutSessionSerializer, WorkoutSerializer
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from .serializers import WorkoutSessionSerializer, WorkoutSerializer, UserRegistrationSerializer
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
+class UserRegistrationView(APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        try:
+            serializer = UserRegistrationSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'success': True, 'message': 'User created successfully.'})
+            return Response({'success': False, 'errors': serializer.errors}, status=400)
+        except Exception as e:
+            return Response({'success': False, 'error': str(e)}, status=500)
+        
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         try:
