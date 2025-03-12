@@ -17,7 +17,7 @@ class App extends React.Component {
     const { username, password } = this.state;
 
     try {
-      const res = await axios.post('http://localhost:8000/auth/token/login/', {
+      const res = await axios.post('http://localhost:8000/api/token/login/', {
         username,
         password,
       });
@@ -39,7 +39,7 @@ class App extends React.Component {
 
     try {
       const res = await axios.get('http://localhost:8000/workout-sessions/1', {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { 'Authorization': `Token ${token}` },
       });
 
       this.setState({
