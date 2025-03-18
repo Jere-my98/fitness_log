@@ -9,6 +9,7 @@ class WorkoutSerializer(serializers.ModelSerializer):
         
 class WorkoutSessionSerializer(serializers.ModelSerializer):
     workouts = WorkoutSerializer(many=True)
+    date = serializers.DateField(format="%Y-%m-%d", read_only=True)
     time = serializers.TimeField(format="%H:%M", read_only=True)
     
     class Meta:
