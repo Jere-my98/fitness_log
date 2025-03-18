@@ -39,18 +39,21 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key='access_token',
                 value=access_token,
                 httponly=True,
-                samesite='None',  # Required for cross-origin cookies
+                samesite='Lax',  # Required for cross-origin cookies
                 secure=False,     # Use False for localhost; change to True in production
                 path='/',
+                # partitioned=True,
             )
+
 
             response.set_cookie(
                 key='refresh_token',
                 value=refresh_token,
                 httponly=True,
-                samesite='None',
+                samesite='Lax',
                 secure=False,     # Use False for localhost; change to True in production
                 path='/',
+                # partitioned=True,
             )
 
             return response
@@ -81,10 +84,12 @@ class CustomRefreshTokenView(TokenRefreshView):
                 key='access_token',
                 value=access_token,
                 httponly=True,
-                samesite='None',
-                secure=True,
+                samesite='Lax',
+                secure=False,
                 path='/',
+                # partitioned=True,
             )
+
             return res
 
         except Exception as e:
@@ -96,8 +101,8 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             response = Response({"detail": "Logout successful."})
-            response.delete_cookie('access_token', path='/',samesite='None')
-            response.delete_cookie('refresh_token',path='/',samesite='None')
+            response.delete_cookie('access_token', path='/',samesite='Lax')
+            response.delete_cookie('refresh_token',path='/',samesite='Lax')
             return response
     
         except Exception as e:
@@ -120,7 +125,6 @@ class WorkoutSessionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
 
 class WorkoutViewSet(viewsets.ModelViewSet):
     serializer_class = WorkoutSerializer

@@ -65,7 +65,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 CORS_ALLOW_METHODS = (
     "DELETE",
@@ -77,6 +80,7 @@ CORS_ALLOW_METHODS = (
 )
 
 CORS_ALLOW_HEADERS = (
+    "origin",
     "accept",
     "authorization",
     "content-type",
@@ -85,12 +89,22 @@ CORS_ALLOW_HEADERS = (
     "x-requested-with",
 )
 
-CSRF_COOKIE_SECURE = False  # Use False for localhost; change to True in production
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:5173", 
+    "http://127.0.0.1:5173"
+]
+CSRF_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'None'
-
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:5173" 
+]
+SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_SAMESITE = 'None'
+
 
 INTERNAL_IPS = [
     "127.0.0.1",
