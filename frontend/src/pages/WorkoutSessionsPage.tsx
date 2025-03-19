@@ -52,7 +52,7 @@ export function WorkoutSessionsPage() {
 
                 setWorkoutDetails(workoutMap);
             } catch (err) {
-                setError("Failed to fetch workout sessions");
+                setError("Failed to fetch workout sessions. Error: " + err);
                 console.error("Error:", err);
             } finally {
                 setLoading(false);
