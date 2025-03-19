@@ -1,12 +1,11 @@
-// src/components/LogoutButton.tsx
 import { Button } from "./ui/button";
-import { logout } from "@/services/authService"; // Import the logout function
+import { logout } from "@/services/authService";
 
 export function LogoutButton() {
     const handleLogout = async () => {
         try {
-            await logout(); // Call the logout function
-            window.location.href = "/login"; // Redirect to the login page
+            await logout(); 
+            window.location.href = "/login";
         } catch (err) {
             console.error("Logout error:", err);
         }

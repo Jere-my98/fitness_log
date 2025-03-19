@@ -1,19 +1,55 @@
-import { refreshToken } from "./authService";
+import { refreshToken } from "@/services/authService";
+import axios from "axios";
 
-export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
-    let response = await fetch(url, {
-        ...options,
-        credentials: "include", // Include cookies
-    });
+export const BASE_URL = "http://localhost:8000/";
+export const LOGIN_URL = `${BASE_URL}login/`;
+export const LOGOUT_URL = `${BASE_URL}logout/`;
+export const REGISTER_URL = `${BASE_URL}register/`;
+export const REFRESH_TOKEN_URL = `${BASE_URL}api/token/refresh/`;
 
-    // If the access token is expired, try refreshing it
-    if (response.status === 401) {
-        await refreshToken();
-        response = await fetch(url, {
-            ...options,
-            credentials: "include",
-        });
+
+// Axios instance with default configurations
+const axiosInstance = axios.create({
+    baseURL: BASE_URL, // Base URL for all requests
+    withCredentials: true, // Include cookies in requests
+});
+
+// Add a request interceptor to include the access token in headers
+axiosInstance.interceptors.request.use(
+    (config) => {
+        // You can modify the request config here (e.g., add headers)
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
     }
+);
 
-    return response;
-};
+// Response interceptor to handle token refresh
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        // If the error is due to an expired token (401) and it's not a retry request
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true; // Mark the request as retried
+
+            try {
+                // Refresh the access token
+                await refreshToken();
+
+                // Retry the original request
+                return axiosInstance(originalRequest);
+            } catch (err) {
+                // If token refresh fails, redirect to login
+                window.location.href = "/login";
+                return Promise.reject(err);
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
+
+export default axiosInstance;

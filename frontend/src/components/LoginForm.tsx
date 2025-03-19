@@ -1,4 +1,3 @@
-// src/components/LoginForm.tsx
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import {
@@ -49,6 +48,7 @@ export function LoginForm() {
                             id="username"
                             type="text"
                             placeholder="Coleman"
+                            autoComplete="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
@@ -59,6 +59,7 @@ export function LoginForm() {
                         <Input
                             id="password"
                             type="password"
+                            autoComplete="current-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
