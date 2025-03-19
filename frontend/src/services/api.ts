@@ -12,6 +12,7 @@ export const REFRESH_TOKEN_URL = `${BASE_URL}api/token/refresh/`;
 const axiosInstance = axios.create({
     baseURL: BASE_URL, // Base URL for all requests
     withCredentials: true, // Include cookies in requests
+    timeout:10000,
 });
 
 // Add a request interceptor to include the access token in headers

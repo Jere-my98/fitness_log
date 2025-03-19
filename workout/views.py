@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, serializers
+from fitness.settings import SESSION_COOKIE_SAMESITE, SESSION_COOKIE_SECURE, CSRF_COOKIE_HTTPONLY
 from .models import WorkoutSession, Workout
 from .serializers import WorkoutSessionSerializer, WorkoutSerializer, UserRegistrationSerializer
 from rest_framework_simplejwt.views import (
@@ -38,9 +39,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             response.set_cookie(
                 key='access_token',
                 value=access_token,
-                httponly=True,
-                samesite='Lax',  # Required for cross-origin cookies
-                secure=False,     # Use False for localhost; change to True in production
+                httponly=CSRF_COOKIE_HTTPONLY,
+                samesite=SESSION_COOKIE_SAMESITE,  
+                secure=SESSION_COOKIE_SECURE,     
                 path='/',
                 # partitioned=True,
             )
@@ -49,9 +50,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             response.set_cookie(
                 key='refresh_token',
                 value=refresh_token,
-                httponly=True,
-                samesite='Lax',
-                secure=False,     # Use False for localhost; change to True in production
+                httponly=CSRF_COOKIE_HTTPONLY,
+                samesite=SESSION_COOKIE_SAMESITE,
+                secure=SESSION_COOKIE_SECURE,     
                 path='/',
                 # partitioned=True,
             )
@@ -83,9 +84,9 @@ class CustomRefreshTokenView(TokenRefreshView):
             res.set_cookie(
                 key='access_token',
                 value=access_token,
-                httponly=True,
-                samesite='Lax',
-                secure=False,
+                httponly=CSRF_COOKIE_HTTPONLY,
+                samesite=SESSION_COOKIE_SAMESITE,
+                secure=SESSION_COOKIE_SECURE,
                 path='/',
                 # partitioned=True,
             )
@@ -101,8 +102,8 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             response = Response({"detail": "Logout successful."})
-            response.delete_cookie('access_token', path='/',samesite='Lax')
-            response.delete_cookie('refresh_token',path='/',samesite='Lax')
+            response.delete_cookie('access_token', path='/',samesite=SESSION_COOKIE_SAMESITE)
+            response.delete_cookie('refresh_token',path='/',samesite=SESSION_COOKIE_SAMESITE)
             return response
     
         except Exception as e:

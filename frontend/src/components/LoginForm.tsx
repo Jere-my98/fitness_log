@@ -41,7 +41,7 @@ export function LoginForm() {
                 </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-                <form onSubmit={handleSubmit}>
+                <form>
                     <div className="grid gap-2">
                         <Label htmlFor="username">Username</Label>
                         <Input
@@ -67,7 +67,7 @@ export function LoginForm() {
                     </div>
                     {error && <p className="text-red-500 text-sm">{error}</p>}
                     <CardFooter className="p-0 pt-4">
-                        <Button type="submit">Sign in</Button>
+                        <Button type="button" onClick={handleSubmit}>Sign in</Button>
                     </CardFooter>
                 </form>
             </CardContent>
