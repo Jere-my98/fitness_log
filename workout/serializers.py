@@ -7,6 +7,9 @@ from .models import Workout, WorkoutSession
 #  TODO: Check out Ruff and Black for linting and formatting your code
 # TODO: Set up PreCommit hooks to lint and format your code automatically
 # TODO: Setup your IDE to support linting and formatting your code with the tool of choice for the above
+# TODO: Write Docs for your Application (READM.md and an OpenAPI spec (Swagger, DRF))
+# TODO: Write Tests for your Application
+# TODO: Setup a command to Seed your Database with some data
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
