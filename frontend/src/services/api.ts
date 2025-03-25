@@ -6,6 +6,7 @@ export const LOGIN_URL = `${BASE_URL}login/`;
 export const LOGOUT_URL = `${BASE_URL}logout/`;
 export const REGISTER_URL = `${BASE_URL}register/`;
 export const REFRESH_TOKEN_URL = `${BASE_URL}api/token/refresh/`;
+export const TAG_URL = `${BASE_URL}tags/`;
 
 
 // Axios instance with default configurations

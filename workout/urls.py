@@ -1,6 +1,6 @@
 from django.urls import path
 # from django.contrib.auth import views as auth_views
-from .views import WorkoutSessionViewSet, WorkoutViewSet, CustomTokenObtainPairView, CustomRefreshTokenView, LogoutView, UserRegistrationView
+from .views import TagView, WorkoutSessionViewSet, WorkoutViewSet, CustomTokenObtainPairView, CustomRefreshTokenView, LogoutView, UserRegistrationView
 
 
 urlpatterns = [
@@ -17,6 +17,8 @@ urlpatterns = [
     # workouts urls
     path('workout-sessions/<int:session_id>/workouts/', WorkoutViewSet.as_view({'get': 'list', 'post': 'create'}), name='workout-list'),
     path('workout-sessions/<int:session_id>/workouts/<int:pk>/', WorkoutViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),name='workout-detail'),
+
+    path("tags/", TagView.as_view(), name="tag-list"),
 
     # path('auth/login/', auth_views.LoginView.as_view(), name='login'),
     # path('auth/logout/', auth_views.LogoutView.as_view(), name='logout'),

@@ -33,10 +33,14 @@ class WorkoutForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'min': '1', 'max': '40', 'step': '1'})
     )
     body_part = forms.ChoiceField(choices=BODY_PARTS)
-
+    tag = forms.CharField(
+        label='Tag',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'e.g., Squats, Leg raises, Lunges etc.'})
+    )
     class Meta:
         model = Workout
-        fields = ['session', 'weight_carried', 'sets', 'reps', 'body_part']
+        fields = ['session', 'weight_carried', 'sets', 'reps', 'body_part','tag']
 
 WorkoutFormSet = inlineformset_factory(
     WorkoutSession,  # Parent Model

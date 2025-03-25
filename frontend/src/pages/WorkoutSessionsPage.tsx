@@ -12,6 +12,7 @@ interface Workout {
   weight_carried: number;
   sets: number;
   reps: number;
+  tag: string;
 }
 
 interface WorkoutSession {
@@ -106,6 +107,7 @@ export function WorkoutSessionsPage() {
                     <p>Weight: {workout.weight_carried} kg</p>
                     <p>Sets: {workout.sets}</p>
                     <p>Reps: {workout.reps}</p>
+                    <p>Tag: {workout.tag}</p>
                   </li>
                 ))
               ) : (
