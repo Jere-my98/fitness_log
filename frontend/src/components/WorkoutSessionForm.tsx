@@ -10,7 +10,7 @@ interface WorkoutData {
   sets: number;
   reps: number;
   weight_carried: number;
-  tag: string | null;
+  tag: string;
 }
 
 const WorkoutSessionForm = () => {
@@ -18,7 +18,7 @@ const WorkoutSessionForm = () => {
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(10);
   const [weight_carried, setWeightcarried] = useState(50);
-  const [tag, setTag] = useState<string | null>(null);
+  const [tag, setTag] = useState<string>("");
 
   const handleSaveWorkoutDetails = async (workoutId: number) => {
     try {
@@ -90,6 +90,16 @@ const WorkoutSessionForm = () => {
             <NumberControl label="Sets" value={sets} onChange={setSets} min={1} />
             <NumberControl label="Reps" value={reps} onChange={setReps} min={1} />
             <NumberControl label="Weight" value={weight_carried} onChange={setWeightcarried} min={0} />
+            <div>
+              <label htmlFor="tag">Tag</label>
+              <input
+                id="tag"
+                type="text"
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+                className="input"
+              />
+            </div>
         </div>
 
         <Button onClick={addWorkout} variant="outline">

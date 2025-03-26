@@ -8,18 +8,18 @@ interface WorkoutFormProps {
         sets: number;
         reps: number;
         weight_carried: number;
-        tagId: number | null;
+        tag: string;
     };
     onUpdate: (id: number, updatedWorkout: Partial<any>) => void;
     onDelete: (id: number) => void;
 }
 
 export const WorkoutForm = ({ workoutData, onUpdate, onDelete }: WorkoutFormProps) => {
-    const [selectedTagId, setSelectedTagId] = useState<number | null>(workoutData.tagId);
+    const [selectedTag, setSelectedTag] = useState<string>(workoutData.tag);
 
-    const handleTagChange = (tagId: number | null) => {
-        setSelectedTagId(tagId);
-        onUpdate(workoutData.id, { tagId });
+    const handleTagChange = (tag: string) => {
+        setSelectedTag(tag);
+        onUpdate(workoutData.id, { tag: selectedTag });
     };
 
     return (
@@ -46,7 +46,7 @@ export const WorkoutForm = ({ workoutData, onUpdate, onDelete }: WorkoutFormProp
             </div>
 
             <TagSelector
-                selectedTagId={selectedTagId}
+                selectedTag={selectedTag}
                 workoutId={workoutData.id}
                 onTagChange={handleTagChange}
             />

@@ -9,18 +9,18 @@ export interface Tag {
 }
 
 interface TagSelectorProps {
-  selectedTagId: number | null;
+  selectedTag: string;
   workoutId: number;
-  onTagChange: (tagId: number | null) => void;
+  onTagChange: (tag: string) => void;
 }
 
 const TagSelector: React.FC<TagSelectorProps> = ({
-  selectedTagId,
+  selectedTag,
   workoutId,
   onTagChange,
 }) => {
   const [tags, setTags] = useState<Tag[]>([]);
-  const sessionId = 1; // Hardcoded for now
+  const sessionId = 1;
   const [newTagName, setNewTagName] = useState("");
 
   useEffect(() => {
@@ -35,11 +35,11 @@ const TagSelector: React.FC<TagSelectorProps> = ({
     loadTags();
   }, []);
 
-  const handleTagToggle = async (tagId: number) => {
-    const newTagId = selectedTagId === tagId ? null : tagId; // Toggle logic
+  const handleTagToggle = async (tag: string) => {
+    const newTag = selectedTag === tag ? "" : tag; // Toggle logic
     try {
-      await updateWorkoutTag(sessionId, workoutId, newTagId);
-      onTagChange(newTagId);
+      await updateWorkoutTag(sessionId, workoutId, newTag);
+      onTagChange(newTag);
     } catch (error) {
       console.error("Error updating tag:", error);
     }
@@ -64,7 +64,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
       <div
         key={tag.id}
         className={`border rounded-lg p-2 cursor-pointer ${
-          selectedTagId === tag.id ? "bg-blue-500 text-white" : "bg-gray-200"
+          selectedTag === tag.name ? "bg-blue-500 text-white" : "bg-gray-200"
         }`}
       >
         {tag.name}
@@ -72,9 +72,9 @@ const TagSelector: React.FC<TagSelectorProps> = ({
           className="ml-2"
           size="icon"
           variant="outline"
-          onClick={() => handleTagToggle(tag.id)}
+          onClick={() => handleTagToggle(tag.name)}
         >
-          {selectedTagId === tag.id ? "❌" : "✓"}
+          {selectedTag === tag.name ? "❌" : "✓"}
         </Button>
       </div>
     ))}

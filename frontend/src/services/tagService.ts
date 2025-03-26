@@ -12,8 +12,8 @@ export const createTag = async (tagName: string) => {
     return response.data;
 };
 
-export const updateWorkoutTag = async (sessionId:number, workoutId: number, tagId: number | null) => {
-    const response = await axiosInstance.patch(`${BASE_URL}workout-sessions/${sessionId}/workouts/${workoutId}/`, { tag: tagId });
+export const updateWorkoutTag = async (sessionId:number, workoutId: number, tagName: string) => {
+    const response = await axiosInstance.patch(`${BASE_URL}workout-sessions/${sessionId}/workouts/${workoutId}/`, { tag: tagName });
     return response.data;
 };
 
