@@ -16,6 +16,8 @@ pillow = "*"
 django-cors-headers = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+ruff = "*"
+black = "*"
 
 [dev-packages]
 

@@ -1,0 +1,29 @@
+[tool.ruff]
+line-length = 88
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort
+  "B",   # flake8-bugbear
+  "C",   # flake8-comprehensions
+  "UP",  # pyupgrade
+  "W",   # pycodestyle warnings
+  "N",   # pep8-naming
+]
+ignore = ["E501"]  # Black handles line length
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | env
+  | venv
+  | static
+  | migrations
+  | __pycache__
+)/
+'''
