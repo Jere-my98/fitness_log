@@ -6,73 +6,75 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('userprofile', '0001_initial'),
+        ("userprofile", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='userprofile',
+            name="userprofile",
             options={},
         ),
         migrations.AlterModelManagers(
-            name='userprofile',
-            managers=[
-            ],
+            name="userprofile",
+            managers=[],
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='date_joined',
+            model_name="userprofile",
+            name="date_joined",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='email',
+            model_name="userprofile",
+            name="email",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='first_name',
+            model_name="userprofile",
+            name="first_name",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='groups',
+            model_name="userprofile",
+            name="groups",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='is_active',
+            model_name="userprofile",
+            name="is_active",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='is_staff',
+            model_name="userprofile",
+            name="is_staff",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='is_superuser',
+            model_name="userprofile",
+            name="is_superuser",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='last_login',
+            model_name="userprofile",
+            name="last_login",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='last_name',
+            model_name="userprofile",
+            name="last_name",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='password',
+            model_name="userprofile",
+            name="password",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='user_permissions',
+            model_name="userprofile",
+            name="user_permissions",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='username',
+            model_name="userprofile",
+            name="username",
         ),
         migrations.AddField(
-            model_name='userprofile',
-            name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="userprofile",
+            name="user",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Workout, WorkoutSession, Tag
+from .models import Tag, Workout, WorkoutSession
 
 # TODO: Create a Github Action Pipeline to run tests and lint your code
 # TODO: Check out Ruff and Black for linting and formatting your code
@@ -17,13 +17,18 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ["id", "name"]
 
+
 class WorkoutSerializer(serializers.ModelSerializer):
-    tag = serializers.CharField(write_only=True)  # Accepts both tag names for new tags and existing tag IDs
-    tag_detail = TagSerializer(source="tag", read_only=True)  # For displaying tag details
+    tag = serializers.CharField(
+        write_only=True
+    )  # Accepts both tag names for new tags and existing tag IDs
+    tag_detail = TagSerializer(
+        source="tag", read_only=True
+    )  # For displaying tag details
 
     class Meta:
         model = Workout
-        fields = ["weight_carried", "sets", "reps", "body_part","tag", "tag_detail"]
+        fields = ["weight_carried", "sets", "reps", "body_part", "tag", "tag_detail"]
 
     def create(self, validated_data):
         tag_name = validated_data.pop("tag", None)

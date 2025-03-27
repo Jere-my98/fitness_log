@@ -1,6 +1,6 @@
 [tool.ruff]
 line-length = 88
-select = [
+lint.select = [
   "E",   # pycodestyle errors
   "F",   # pyflakes
   "I",   # isort
@@ -9,8 +9,11 @@ select = [
   "UP",  # pyupgrade
   "W",   # pycodestyle warnings
   "N",   # pep8-naming
+  "DJ",  # Django-specific rules
 ]
-ignore = ["E501"]  # Black handles line length
+lint.ignore = ["E501"]  # Black handles line length
+
+
 
 [tool.black]
 line-length = 88

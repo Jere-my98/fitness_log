@@ -17,12 +17,14 @@ class WorkoutSession(models.Model):
     def __str__(self):
         return self.name
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=40)
 
     def __str__(self):
         return self.name
-    
+
+
 class Workout(models.Model):
     workout_session = models.ForeignKey(
         WorkoutSession, on_delete=models.CASCADE, related_name="workouts"
