@@ -51,7 +51,7 @@ jobs:
 
     - name: Run Tests
       env:
-            DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness  # Updated DB name
+            DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness
             SECRET_KEY: ${{ env.SECRET_KEY }}
       run: |
         python3 manage.py makemigrations
