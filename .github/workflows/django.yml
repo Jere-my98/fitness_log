@@ -26,8 +26,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip3 install python-dotenv
-        pip3 install Django
+        pip3 install python-dotenv Django django-cors-headers djangorestframework djangorestframework-simplejwt django-debug-toolbar django-filter djoser
         pip3 freeze > requirements.txt
         pip3 install -r requirements.txt
 
