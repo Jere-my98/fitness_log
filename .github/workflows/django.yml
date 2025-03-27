@@ -10,6 +10,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fitness
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     strategy:
       max-parallel: 4
       matrix:
@@ -18,19 +29,30 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Load Environment Variables
+      run: |
+        source env.sh
+        echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
+
     - name: Set up Python 
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
 
     - name: Install Dependencies
+      env:
+              DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness
+              SECRET_KEY: ${{ env.SECRET_KEY }}
       run: |
         python3 -m pip install --upgrade pip
-        pip3 install python-dotenv Django django-cors-headers djangorestframework djangorestframework-simplejwt django-debug-toolbar django-filter djoser
+        pip3 install psycopg2-binary python-dotenv Django django-cors-headers djangorestframework djangorestframework-simplejwt django-debug-toolbar django-filter djoser
         pip3 freeze > requirements.txt
         pip3 install -r requirements.txt
 
     - name: Run Tests
+      env:
+            DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness  # Updated DB name
+            SECRET_KEY: ${{ env.SECRET_KEY }}
       run: |
         python3 manage.py makemigrations
         python3 manage.py migrate
