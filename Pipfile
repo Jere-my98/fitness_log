@@ -17,7 +17,7 @@ django-cors-headers = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 ruff = "*"
-black = "*"
+black = "==25.1.0"
 pre-commit = "*"
 
 [dev-packages]

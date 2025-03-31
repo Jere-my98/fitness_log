@@ -10,6 +10,9 @@ from .models import Tag, Workout, WorkoutSession
 # TODO: Write Docs for your Application (README.md and an OpenAPI spec (Swagger, DRF))
 # TODO: Write Tests for your Application.
 # TODO: Setup a command to Seed your Database with some data.
+# TODO: No merging with main without passing all checks
+# TODO: Read about Git stash
+# TODO: No pushing directly to main
 
 
 class TagSerializer(serializers.ModelSerializer):
