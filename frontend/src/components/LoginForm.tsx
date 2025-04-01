@@ -24,7 +24,7 @@ export function LoginForm() {
 
         try {
             await login({ username, password });
-            navigate("/workout-sessions-log"); // Redirect to the Workout Sessions page
+            navigate("/workout-logger");
         } catch (err) {
             setError("Invalid username or password");
             console.error("Login error:", err);
