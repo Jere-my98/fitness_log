@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
 import { ArrowLeft, CalendarIcon, Clock } from "lucide-react"
 
-type Exercise = {
+type Workout = {
   id: string
   name: string
   sets: {
@@ -14,22 +14,22 @@ type Exercise = {
   completed?: boolean
 }
 
-type Workout = {
+type WorkoutSession = {
   id: string
   date: Date
   name: string
-  exercises: Exercise[]
+  workouts: Workout[]
 }
 
-interface WorkoutDetailProps {
-  workout: Workout
+interface WorkoutSessionDetailProps {
+  workoutSession: WorkoutSession
   onBack: () => void
 }
 
-export default function WorkoutDetail({ workout, onBack }: WorkoutDetailProps) {
+export default function WorkoutSessionDetail({ workoutSession, onBack }: WorkoutSessionDetailProps) {
   // Calculate some stats
-  const totalSets = workout.exercises.reduce((total, ex) => total + ex.sets.length, 0)
-  const totalReps = workout.exercises.reduce((total, ex) => {
+  const totalSets = workoutSession.workouts.reduce((total, ex) => total + ex.sets.length, 0)
+  const totalReps = workoutSession.workouts.reduce((total, ex) => {
     return (
       total +
       ex.sets.reduce((setTotal, set) => {
@@ -39,7 +39,7 @@ export default function WorkoutDetail({ workout, onBack }: WorkoutDetailProps) {
   }, 0)
 
   // Find highest weight used for each exercise
-  const exerciseMaxWeights = workout.exercises.map((ex) => {
+  const exerciseMaxWeights = workoutSession.workouts.map((ex) => {
     const maxWeightSet = ex.sets.reduce((max, set) => {
       const weight = Number.parseFloat(set.weight) || 0
       return weight > max ? weight : max
@@ -53,29 +53,29 @@ export default function WorkoutDetail({ workout, onBack }: WorkoutDetailProps) {
         <Button variant="ghost" size="icon" onClick={onBack} className="h-9 w-9">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h2 className="text-2xl font-bold">{workout.name}</h2>
+        <h2 className="text-2xl font-bold">{workoutSession.name}</h2>
       </div>
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Workout Summary</CardTitle>
+          <CardTitle className="text-lg">Workout Session Summary</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-              <span>{format(workout.date, "MMM d, yyyy")}</span>
+              <span>{format(workoutSession.date, "MMM d, yyyy")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <span>{format(workout.date, "h:mm a")}</span>
+              <span>{format(workoutSession.date, "h:mm a")}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-primary/10 rounded-lg p-3 text-center">
-              <div className="text-xl font-bold">{workout.exercises.length}</div>
-              <div className="text-xs text-muted-foreground">Exercises</div>
+              <div className="text-xl font-bold">{workoutSession.workouts.length}</div>
+              <div className="text-xs text-muted-foreground">Workout Sessions</div>
             </div>
             <div className="bg-primary/10 rounded-lg p-3 text-center">
               <div className="text-xl font-bold">{totalSets}</div>
@@ -90,9 +90,9 @@ export default function WorkoutDetail({ workout, onBack }: WorkoutDetailProps) {
       </Card>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Exercises</h3>
+        <h3 className="text-lg font-semibold">Workouts</h3>
 
-        {workout.exercises.map((exercise, index) => (
+        {workoutSession.workouts.map((exercise, index) => (
           <Card key={exercise.id}>
             <CardHeader className="p-4 pb-2">
               <div className="flex items-center justify-between">

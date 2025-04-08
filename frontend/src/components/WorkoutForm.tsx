@@ -7,18 +7,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { X } from "lucide-react"
 
-interface ExerciseFormProps {
+interface WorkoutFormProps {
   onAdd: (name: string) => void
   onCancel: () => void
 }
 
-export default function ExerciseForm({ onAdd, onCancel }: ExerciseFormProps) {
-  const [exerciseName, setExerciseName] = useState("")
+export default function WorkoutForm({ onAdd, onCancel }: WorkoutFormProps) {
+  const [workoutName, setWorkoutName] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (exerciseName.trim()) {
-      onAdd(exerciseName.trim())
+    if (workoutName.trim()) {
+      onAdd(workoutName.trim())
     }
   }
 
@@ -26,7 +26,7 @@ export default function ExerciseForm({ onAdd, onCancel }: ExerciseFormProps) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle>Add Exercise</CardTitle>
+          <CardTitle>Add Workout</CardTitle>
           <Button variant="ghost" size="icon" onClick={onCancel} className="h-8 w-8">
             <X className="h-4 w-4" />
           </Button>
@@ -35,19 +35,19 @@ export default function ExerciseForm({ onAdd, onCancel }: ExerciseFormProps) {
       <form onSubmit={handleSubmit}>
         <CardContent className="pb-3">
           <div className="space-y-2">
-            <Label htmlFor="exercise-name">Exercise Name</Label>
+            <Label htmlFor="workout-name">Workout Name</Label>
             <Input
-              id="exercise-name"
+              id="workout-name"
               placeholder="Bench Press, Squat, etc."
-              value={exerciseName}
-              onChange={(e) => setExerciseName(e.target.value)}
+              value={workoutName}
+              onChange={(e) => setWorkoutName(e.target.value)}
               autoFocus
             />
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full py-6 text-lg" disabled={!exerciseName.trim()}>
-            Add Exercise
+          <Button type="submit" className="w-full py-6 text-lg" disabled={!workoutName.trim()}>
+            Add Workout
           </Button>
         </CardFooter>
       </form>

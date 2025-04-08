@@ -6,7 +6,7 @@ import { PlusCircle, CheckCircle, X, Plus, Save } from "lucide-react"
 import { format } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 
-type Exercise = {
+type Workout = {
   id: string
   name: string
   sets: {
@@ -17,58 +17,58 @@ type Exercise = {
   completed?: boolean
 }
 
-type Workout = {
+type WorkoutSession = {
   id: string
   date: Date
   name: string
-  exercises: Exercise[]
+  workouts: Workout[]
 }
 
-interface ActiveWorkoutProps {
-  workout: Workout
-  onAddExercise: () => void
-  onAddSet: (exerciseId: string) => void
-  onUpdateSet: (exerciseId: string, setId: string, field: "reps" | "weight", value: string) => void
-  onSaveExercise: (exerciseId: string) => void
+interface ActiveWorkoutSessionProps {
+  workoutSession: WorkoutSession
+  onAddWorkout: () => void
+  onAddSet: (workoutId: string) => void
+  onUpdateSet: (workoutId: string, setId: string, field: "reps" | "weight", value: string) => void
+  onSaveWorkout: (workoutId: string) => void
   onFinish: () => void
   onCancel: () => void
 }
 
-export default function ActiveWorkout({
-  workout,
-  onAddExercise,
+export default function ActiveWorkoutSession({
+  workoutSession,
+  onAddWorkout,
   onAddSet,
   onUpdateSet,
-  onSaveExercise,
+  onSaveWorkout,
   onFinish,
   onCancel,
-}: ActiveWorkoutProps) {
-  const [expandedExercise, setExpandedExercise] = useState<string | null>(
-    workout.exercises.length > 0 ? workout.exercises[workout.exercises.length - 1].id : null,
+}: ActiveWorkoutSessionProps) {
+  const [expandedWorkout, setExpandedWorkout] = useState<string | null>(
+    workoutSession.workouts.length > 0 ? workoutSession.workouts[workoutSession.workouts.length - 1].id : null,
   )
 
-  const toggleExercise = (exerciseId: string) => {
-    setExpandedExercise(expandedExercise === exerciseId ? null : exerciseId)
+  const toggleWorkout = (workoutId: string) => {
+    setExpandedWorkout(expandedWorkout === workoutId ? null : workoutId)
   }
 
   // Count completed exercises
-  const completedExercises = workout.exercises.filter((ex) => ex.completed).length
+  const completedWorkouts = workoutSession.workouts.filter((ex) => ex.completed).length
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">{workout.name}</h2>
+          <h2 className="text-2xl font-bold">{workoutSession.name}</h2>
           <p className="text-sm text-muted-foreground">
-            Started at {format(workout.date, "h:mm a")} •
-            {completedExercises > 0 && (
+            Started at {format(workoutSession.date, "h:mm a")} •
+            {completedWorkouts > 0 && (
               <span className="ml-1">
-                {completedExercises} of {workout.exercises.length} exercises completed
+                {completedWorkouts} of {workoutSession.workouts.length} workouts completed
               </span>
             )}
-            {completedExercises === 0 && (
+            {completedWorkouts === 0 && (
               <span className="ml-1">
-                {workout.exercises.length} exercise{workout.exercises.length !== 1 ? "s" : ""}
+                {workoutSession.workouts.length} workout{workoutSession.workouts.length !== 1 ? "s" : ""}
               </span>
             )}
           </p>
@@ -83,57 +83,57 @@ export default function ActiveWorkout({
         </div>
       </div>
 
-      {workout.exercises.length > 0 && (
+      {workoutSession.workouts.length > 0 && (
         <div className="space-y-4">
-          {workout.exercises.map((exercise) => (
+          {workoutSession.workouts.map((workout) => (
             <Card
-              key={exercise.id}
-              className={`overflow-hidden ${exercise.completed ? "border-primary/40 bg-primary/5" : ""}`}
+              key={workout.id}
+              className={`overflow-hidden ${workout.completed ? "border-primary/40 bg-primary/5" : ""}`}
             >
-              <CardHeader className="p-4 cursor-pointer" onClick={() => toggleExercise(exercise.id)}>
+              <CardHeader className="p-4 cursor-pointer" onClick={() => toggleWorkout(workout.id)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg">{exercise.name}</CardTitle>
-                    {exercise.completed && (
+                    <CardTitle className="text-lg">{workout.name}</CardTitle>
+                    {workout.completed && (
                       <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20">
                         Saved
                       </Badge>
                     )}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {exercise.sets.length} {exercise.sets.length === 1 ? "set" : "sets"}
+                    {workout.sets.length} {workout.sets.length === 1 ? "set" : "sets"}
                   </div>
                 </div>
               </CardHeader>
 
-              {expandedExercise === exercise.id && (
+              {expandedWorkout === workout.id && (
                 <>
                   <CardContent className="p-4 pt-0">
                     <div className="space-y-3">
-                      {exercise.sets.map((set, index) => (
+                      {workout.sets.map((set, index) => (
                         <div key={set.id} className="grid grid-cols-12 gap-3 items-center">
                           <div className="col-span-1 text-center font-medium">{index + 1}</div>
                           <div className="col-span-5">
                             <Input
                               placeholder="Reps"
                               value={set.reps}
-                              onChange={(e) => onUpdateSet(exercise.id, set.id, "reps", e.target.value)}
+                              onChange={(e) => onUpdateSet(workout.id, set.id, "reps", e.target.value)}
                               className="h-12 text-center"
                               type="number"
                               inputMode="numeric"
-                              disabled={exercise.completed}
+                              disabled={workout.completed}
                             />
                           </div>
                           <div className="col-span-6">
                             <Input
                               placeholder="Weight"
                               value={set.weight}
-                              onChange={(e) => onUpdateSet(exercise.id, set.id, "weight", e.target.value)}
+                              onChange={(e) => onUpdateSet(workout.id, set.id, "weight", e.target.value)}
                               className="h-12 text-center"
                               type="number"
                               inputMode="numeric"
                               step="0.5"
-                              disabled={exercise.completed}
+                              disabled={workout.completed}
                             />
                           </div>
                         </div>
@@ -141,12 +141,12 @@ export default function ActiveWorkout({
                     </div>
                   </CardContent>
                   <CardFooter className="p-4 pt-0 flex flex-col gap-3">
-                    {!exercise.completed && (
+                    {!workout.completed && (
                       <>
                         <Button
                           variant="outline"
                           className="w-full py-6 text-base"
-                          onClick={() => onAddSet(exercise.id)}
+                          onClick={() => onAddSet(workout.id)}
                         >
                           <Plus className="h-5 w-5 mr-2" />
                           Add Set
@@ -154,10 +154,10 @@ export default function ActiveWorkout({
                         <Button
                           variant="default"
                           className="w-full py-6 text-base"
-                          onClick={() => onSaveExercise(exercise.id)}
+                          onClick={() => onSaveWorkout(workout.id)}
                         >
                           <Save className="h-5 w-5 mr-2" />
-                          Save Exercise
+                          Save Workout
                         </Button>
                       </>
                     )}
@@ -169,9 +169,9 @@ export default function ActiveWorkout({
         </div>
       )}
 
-      <Button className="w-full py-6 text-lg flex items-center gap-2" onClick={onAddExercise}>
+      <Button className="w-full py-6 text-lg flex items-center gap-2" onClick={onAddWorkout}>
         <PlusCircle className="h-5 w-5" />
-        Add Exercise
+        Add Workout
       </Button>
     </div>
   )
