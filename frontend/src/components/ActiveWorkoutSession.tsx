@@ -51,7 +51,6 @@ export default function ActiveWorkoutSession({
     setExpandedWorkout(expandedWorkout === workoutId ? null : workoutId)
   }
 
-  // Count completed exercises
   const completedWorkouts = workoutSession.workouts.filter((ex) => ex.completed).length
 
   return (

@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, serializers, viewsets
+from rest_framework import permissions, serializers, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,9 +10,8 @@ from fitness.settings import (
     SESSION_COOKIE_SECURE,
 )
 
-from .models import Tag, Workout, WorkoutSession
+from .models import Workout, WorkoutSession
 from .serializers import (
-    TagSerializer,
     UserRegistrationSerializer,
     WorkoutSerializer,
     WorkoutSessionSerializer,
@@ -173,12 +172,6 @@ class WorkoutViewSet(viewsets.ModelViewSet):
         if workout_id:
             queryset = queryset.filter(id=workout_id)
 
-        # Filter by tag if provided
-        tag = self.request.query_params.get("tag")
-        if tag:
-            queryset = queryset.filter(tag__name=tag)
-        return queryset
-
     def perform_create(self, serializer):
         session = serializer.validated_data["session"]
         if session.user != self.request.user:
@@ -186,8 +179,3 @@ class WorkoutViewSet(viewsets.ModelViewSet):
                 "You can only add workouts to your own session."
             )
         serializer.save()
-
-
-class TagView(generics.ListCreateAPIView):
-    queryset = Tag.objects.all().order_by("name")
-    serializer_class = TagSerializer

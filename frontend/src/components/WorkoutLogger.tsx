@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Timer } from "lucide-react"
 import WorkoutSessionHistory from "./WorkoutSessionHistory"
-import ActiveWorkoutSession from "./ActiveWorkout"
+import ActiveWorkoutSession from "./ActiveWorkoutSession"
 import WorkoutForm from "./WorkoutForm"
 import WorkoutSessionDetail from "./WorkoutSessionDetail"
 
