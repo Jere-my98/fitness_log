@@ -5,12 +5,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Timer } from "lucide-react"
-import WorkoutHistory from "./WorkoutHistory"
-import ActiveWorkout from "./ActiveWorkout"
-import ExerciseForm from "./ExerciseForm"
-import WorkoutDetail from "./WorkoutDetail"
+import WorkoutSessionHistory from "./WorkoutSessionHistory"
+import ActiveWorkoutSession from "./ActiveWorkout"
+import WorkoutForm from "./WorkoutForm"
+import WorkoutSessionDetail from "./WorkoutSessionDetail"
 
-type Exercise = {
+type Workout = {
   id: string
   name: string
   sets: {
@@ -21,41 +21,41 @@ type Exercise = {
   completed?: boolean
 }
 
-type Workout = {
+type WorkoutSession = {
   id: string
   date: Date
   name: string
-  exercises: Exercise[]
+  workouts: Workout[]
 }
 
 export default function WorkoutLogger() {
-  const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null)
-  const [workoutName, setWorkoutName] = useState("")
-  const [showExerciseForm, setShowExerciseForm] = useState(false)
-  const [workouts, setWorkouts] = useState<Workout[]>([])
+  const [activeWorkoutSession, setActiveWorkoutSession] = useState<WorkoutSession | null>(null)
+  const [workoutSessionName, setWorkoutSessionName] = useState("")
+  const [showWorkoutForm, setShowWorkoutForm] = useState(false)
+  const [workoutSessions, setWorkoutSessions] = useState<WorkoutSession[]>([])
   const [activeTab, setActiveTab] = useState("logger")
-  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
+  const [selectedWorkoutSession, setSelectedWorkoutSession] = useState<WorkoutSession | null>(null)
 
-  const startWorkout = () => {
-    if (!workoutName) return
+  const startWorkoutSession = () => {
+    if (!workoutSessionName) return
+
+    const newWorkoutSession: WorkoutSession = {
+      id: crypto.randomUUID(),
+      date: new Date(),
+      name: workoutSessionName,
+      workouts: [],
+    }
+
+    setActiveWorkoutSession(newWorkoutSession)
+    setWorkoutSessionName("")
+  }
+
+  const addWorkoutToWorkoutSession = (workoutName: string) => {
+    if (!activeWorkoutSession || !workoutName) return
 
     const newWorkout: Workout = {
       id: crypto.randomUUID(),
-      date: new Date(),
       name: workoutName,
-      exercises: [],
-    }
-
-    setActiveWorkout(newWorkout)
-    setWorkoutName("")
-  }
-
-  const addExerciseToWorkout = (exerciseName: string) => {
-    if (!activeWorkout || !exerciseName) return
-
-    const newExercise: Exercise = {
-      id: crypto.randomUUID(),
-      name: exerciseName,
       sets: [
         {
           id: crypto.randomUUID(),
@@ -65,31 +65,31 @@ export default function WorkoutLogger() {
       ],
     }
 
-    setActiveWorkout({
-      ...activeWorkout,
-      exercises: [...activeWorkout.exercises, newExercise],
+    setActiveWorkoutSession({
+      ...activeWorkoutSession,
+      workouts: [...activeWorkoutSession.workouts, newWorkout],
     })
 
-    setShowExerciseForm(false)
+    setShowWorkoutForm(false)
   }
 
-  const saveExercise = (exerciseId: string) => {
-    if (!activeWorkout) return
+  const saveWorkout = (workoutId: string) => {
+    if (!activeWorkoutSession) return
 
-    // First check if the exercise has at least one completed set
-    const exercise = activeWorkout.exercises.find((ex) => ex.id === exerciseId)
-    if (!exercise) return
+    // First check if the workout has at least one completed set
+    const workout = activeWorkoutSession.workouts.find((ex) => ex.id === workoutId)
+    if (!workout) return
 
-    const hasCompletedSet = exercise.sets.some((set) => set.reps && set.weight)
+    const hasCompletedSet = workout.sets.some((set) => set.reps && set.weight)
     if (!hasCompletedSet) {
-      alert("Please complete at least one set before saving the exercise")
+      alert("Please complete at least one set before saving the exercise/workout")
       return
     }
 
-    setActiveWorkout({
-      ...activeWorkout,
-      exercises: activeWorkout.exercises.map((ex) => {
-        if (ex.id === exerciseId) {
+    setActiveWorkoutSession({
+      ...activeWorkoutSession,
+      workouts: activeWorkoutSession.workouts.map((ex) => {
+        if (ex.id === workoutId) {
           return { ...ex, completed: true }
         }
         return ex
@@ -97,16 +97,16 @@ export default function WorkoutLogger() {
     })
   }
 
-  const updateSet = (exerciseId: string, setId: string, field: "reps" | "weight", value: string) => {
-    if (!activeWorkout) return
+  const updateSet = (workoutId: string, setId: string, field: "reps" | "weight", value: string) => {
+    if (!activeWorkoutSession) return
 
-    setActiveWorkout({
-      ...activeWorkout,
-      exercises: activeWorkout.exercises.map((exercise) => {
-        if (exercise.id === exerciseId) {
+    setActiveWorkoutSession({
+      ...activeWorkoutSession,
+      workouts: activeWorkoutSession.workouts.map((workout) => {
+        if (workout.id === workoutId) {
           return {
-            ...exercise,
-            sets: exercise.sets.map((set) => {
+            ...workout,
+            sets: workout.sets.map((set) => {
               if (set.id === setId) {
                 return { ...set, [field]: value }
               }
@@ -114,22 +114,22 @@ export default function WorkoutLogger() {
             }),
           }
         }
-        return exercise
+        return workout
       }),
     })
   }
 
-  const addSetToExercise = (exerciseId: string) => {
-    if (!activeWorkout) return
+  const addSetToWorkout = (workoutId: string) => {
+    if (!activeWorkoutSession) return
 
-    setActiveWorkout({
-      ...activeWorkout,
-      exercises: activeWorkout.exercises.map((exercise) => {
-        if (exercise.id === exerciseId) {
+    setActiveWorkoutSession({
+      ...activeWorkoutSession,
+      workouts: activeWorkoutSession.workouts.map((workout) => {
+        if (workout.id === workoutId) {
           return {
-            ...exercise,
+            ...workout,
             sets: [
-              ...exercise.sets,
+              ...workout.sets,
               {
                 id: crypto.randomUUID(),
                 reps: "",
@@ -138,109 +138,109 @@ export default function WorkoutLogger() {
             ],
           }
         }
-        return exercise
+        return workout
       }),
     })
   }
 
-  const finishWorkout = () => {
-    if (!activeWorkout) return
+  const finishWorkoutSession = () => {
+    if (!activeWorkoutSession) return
 
     // Filter out empty exercises and sets
-    const validExercises = activeWorkout.exercises
-      .map((exercise) => ({
-        ...exercise,
-        sets: exercise.sets.filter((set) => set.reps || set.weight),
+    const validWorkouts = activeWorkoutSession.workouts
+      .map((workout) => ({
+        ...workout,
+        sets: workout.sets.filter((set) => set.reps || set.weight),
       }))
-      .filter((exercise) => exercise.name && exercise.sets.length > 0)
+      .filter((workout) => workout.name && workout.sets.length > 0)
 
-    if (validExercises.length === 0) {
-      setActiveWorkout(null)
+    if (validWorkouts.length === 0) {
+      setActiveWorkoutSession(null)
       setActiveTab("logger")
       return
     }
 
-    const completedWorkout = {
-      ...activeWorkout,
-      exercises: validExercises,
+    const completedWorkoutSession = {
+      ...activeWorkoutSession,
+      workouts: validWorkouts,
     }
 
-    setWorkouts([completedWorkout, ...workouts])
-    setActiveWorkout(null)
+    setWorkoutSessions([completedWorkoutSession, ...workoutSessions])
+    setActiveWorkoutSession(null)
     setActiveTab("history")
   }
 
-  const cancelWorkout = () => {
-    if (confirm("Are you sure you want to cancel this workout? All progress will be lost.")) {
-      setActiveWorkout(null)
+  const cancelWorkoutSession = () => {
+    if (confirm("Are you sure you want to cancel this workout session? All progress will be lost.")) {
+      setActiveWorkoutSession(null)
     }
   }
 
-  const viewWorkoutDetail = (workout: Workout) => {
-    setSelectedWorkout(workout)
+  const viewWorkoutSessionDetail = (workoutsession: WorkoutSession) => {
+    setSelectedWorkoutSession(workoutsession)
   }
 
   const backToHistory = () => {
-    setSelectedWorkout(null)
+    setSelectedWorkoutSession(null)
   }
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-3xl mx-auto">
       <TabsList className="grid w-full grid-cols-2 mb-6">
-        <TabsTrigger value="logger">Workout</TabsTrigger>
+        <TabsTrigger value="logger">Workout Session</TabsTrigger>
         <TabsTrigger value="history">History</TabsTrigger>
       </TabsList>
 
       <TabsContent value="logger" className="space-y-6">
-        {!activeWorkout ? (
+        {!activeWorkoutSession ? (
           <Card>
             <CardHeader>
-              <CardTitle>Start a New Workout</CardTitle>
+              <CardTitle>Start a New Workout Session</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="workout-name">Workout Name</Label>
+                <Label htmlFor="workout-session-name">Workout Session Name</Label>
                 <Input
-                  id="workout-name"
+                  id="workout-session-name"
                   placeholder="Push Day, Leg Day, etc."
-                  value={workoutName}
-                  onChange={(e) => setWorkoutName(e.target.value)}
+                  value={workoutSessionName}
+                  onChange={(e) => setWorkoutSessionName(e.target.value)}
                 />
               </div>
             </CardContent>
             <CardFooter>
               <Button
                 className="w-full flex items-center gap-2 py-6 text-lg"
-                onClick={startWorkout}
-                disabled={!workoutName}
+                onClick={startWorkoutSession}
+                disabled={!workoutSessionName}
               >
                 <Timer className="h-5 w-5" />
-                Start Workout
+                Start Workout Session
               </Button>
             </CardFooter>
           </Card>
         ) : (
-          <ActiveWorkout
-            workout={activeWorkout}
-            onAddExercise={() => setShowExerciseForm(true)}
-            onAddSet={addSetToExercise}
+          <ActiveWorkoutSession
+            workoutSession={activeWorkoutSession}
+            onAddWorkout={() => setShowWorkoutForm(true)}
+            onAddSet={addSetToWorkout}
             onUpdateSet={updateSet}
-            onSaveExercise={saveExercise}
-            onFinish={finishWorkout}
-            onCancel={cancelWorkout}
+            onSaveWorkout={saveWorkout}
+            onFinish={finishWorkoutSession}
+            onCancel={cancelWorkoutSession}
           />
         )}
 
-        {showExerciseForm && activeWorkout && (
-          <ExerciseForm onAdd={addExerciseToWorkout} onCancel={() => setShowExerciseForm(false)} />
+        {showWorkoutForm && activeWorkoutSession && (
+          <WorkoutForm onAdd={addWorkoutToWorkoutSession} onCancel={() => setShowWorkoutForm(false)} />
         )}
       </TabsContent>
 
       <TabsContent value="history">
-        {selectedWorkout ? (
-          <WorkoutDetail workout={selectedWorkout} onBack={backToHistory} />
+        {selectedWorkoutSession ? (
+          <WorkoutSessionDetail workoutSession={selectedWorkoutSession as any} onBack={backToHistory} />
         ) : (
-          <WorkoutHistory workouts={workouts} onViewDetail={viewWorkoutDetail} />
+          <WorkoutSessionHistory workoutsessions={workoutSessions as any} onViewDetail={viewWorkoutSessionDetail as any} />
         )}
       </TabsContent>
     </Tabs>
