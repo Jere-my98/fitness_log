@@ -29,7 +29,7 @@ class Workout(models.Model):
     reps = models.PositiveIntegerField(
         validators=[MinValueValidator(1)]
     )  # Number of reps
-    body_part = models.CharField(max_length=100)  # Body part worked out
+    name = models.CharField(max_length=100)  # Body part worked out
 
     def __str__(self):
         return f"{self.weight_carried} kgs {self.body_part}"
