@@ -18,7 +18,7 @@ from .models import Workout, WorkoutSession
 class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workout
-        fields = ["weight_carried", "sets", "reps", "body_part"]
+        fields = ["id", "weight_carried", "sets", "reps", "name"]
 
 
 class WorkoutSessionSerializer(serializers.ModelSerializer):

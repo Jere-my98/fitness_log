@@ -19,7 +19,7 @@ urlpatterns = [
     # workout sessions urls
     path(
         "workout-sessions/",
-        WorkoutSessionViewSet.as_view({"get": "list"}),
+        WorkoutSessionViewSet.as_view({"get": "list", "post": "create"}),
         name="workout-session-list",
     ),
     path(

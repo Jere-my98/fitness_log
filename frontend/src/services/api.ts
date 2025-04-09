@@ -6,7 +6,6 @@ export const LOGIN_URL = `${BASE_URL}login/`;
 export const LOGOUT_URL = `${BASE_URL}logout/`;
 export const REGISTER_URL = `${BASE_URL}register/`;
 export const REFRESH_TOKEN_URL = `${BASE_URL}api/token/refresh/`;
-export const TAG_URL = `${BASE_URL}tags/`;
 
 
 // Axios instance with default configurations
@@ -19,6 +18,10 @@ const axiosInstance = axios.create({
 // Add a request interceptor to include the access token in headers
 axiosInstance.interceptors.request.use(
     (config) => {
+        const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+        if (csrfToken && ['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase() || '')) {
+            config.headers['X-CSRFToken'] = csrfToken;
+        }
         // You can modify the request config here (e.g., add headers)
         return config;
     },
