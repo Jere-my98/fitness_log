@@ -1,4 +1,4 @@
-import axiosInstance, {
+import apiClient, {
     LOGIN_URL,
     LOGOUT_URL,
     REFRESH_TOKEN_URL,
@@ -12,7 +12,7 @@ export interface LoginCredentials {
 export const login = async (credentials: LoginCredentials): Promise<void> => {
     try {
         console.log("Fetching credentials ...");
-        await axiosInstance.post(LOGIN_URL, credentials);
+        await apiClient.post(LOGIN_URL, credentials);
         console.log("Logged in successfully");
     } catch (err) {
         throw new Error("Login failed because of "+err);
@@ -21,7 +21,7 @@ export const login = async (credentials: LoginCredentials): Promise<void> => {
 
 export const refreshToken = async (): Promise<void> => {
     try {
-        await axiosInstance.post(REFRESH_TOKEN_URL);
+        await apiClient.post(REFRESH_TOKEN_URL);
     } catch (err) {
         throw new Error("Token refresh failed because of "+err);
     }
@@ -29,7 +29,7 @@ export const refreshToken = async (): Promise<void> => {
 
 export const logout = async (): Promise<void> => {
     try {
-        await axiosInstance.post(LOGOUT_URL);
+        await apiClient.post(LOGOUT_URL);
     } catch (err) {
         throw new Error("Logout failed because of "+err);
     }

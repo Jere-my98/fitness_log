@@ -9,14 +9,14 @@ export const REFRESH_TOKEN_URL = `${BASE_URL}api/token/refresh/`;
 
 
 // Axios instance with default configurations
-const axiosInstance = axios.create({
+const apiClient = axios.create({
     baseURL: BASE_URL, // Base URL for all requests
     withCredentials: true, // Include cookies in requests
     timeout:10000,
 });
 
 // Add a request interceptor to include the access token in headers
-axiosInstance.interceptors.request.use(
+apiClient.interceptors.request.use(
     (config) => {
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
         if (csrfToken && ['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase() || '')) {
@@ -31,7 +31,7 @@ axiosInstance.interceptors.request.use(
 );
 
 // Response interceptor to handle token refresh
-axiosInstance.interceptors.response.use(
+apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
                 await refreshToken();
 
                 // Retry the original request
-                return axiosInstance(originalRequest);
+                return apiClient(originalRequest);
             } catch (err) {
                 // If token refresh fails, redirect to login
                 window.location.href = "/login";
@@ -57,4 +57,4 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-export default axiosInstance;
+export default apiClient;

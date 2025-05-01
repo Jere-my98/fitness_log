@@ -1,4 +1,4 @@
-import axiosInstance, { BASE_URL } from "./api";
+import apiClient, { BASE_URL } from "./api";
 
 export interface Workout {
     sessionId: number;
@@ -16,10 +16,15 @@ export interface WorkoutSession {
     date: Date | string;
 }
 
+export const fetchWorkoutSessions = async () => {
+    const response = await apiClient.get(`${BASE_URL}workout-sessions/`);
+    return response.data;
+};
+
 //Create a new workout session
 export const createWorkoutSession = async (sessionName: string): Promise<WorkoutSession> => {
     try {
-        const response = await axiosInstance.post<WorkoutSession>(`${BASE_URL}workout-sessions/`, {
+        const response = await apiClient.post<WorkoutSession>(`${BASE_URL}workout-sessions/`, {
             name: sessionName,
             date: new Date()
         });
@@ -35,7 +40,7 @@ export const createWorkoutSession = async (sessionName: string): Promise<Workout
 };
 
 export const addWorkout = async (sessionId: number, workoutName: string): Promise<Workout> => {
-    const response = await axiosInstance.post<Workout>(`${BASE_URL}workout-sessions/${sessionId}/workouts/`, {
+    const response = await apiClient.post<Workout>(`${BASE_URL}workout-sessions/${sessionId}/workouts/`, {
         session: sessionId,
         name: workoutName,
         sets: [],
